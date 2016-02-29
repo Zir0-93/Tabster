@@ -1,14 +1,13 @@
-/** A Java 1.7 Tabular Expression grammar for ANTLR v4 derived from the Java 1.7 Grammar for ANTLR v4 
- *  (see https://github.com/antlr/grammars-v4)
- *  Uses ANTLR v4's left-recursive expression notation.
+/** 
+ * Grammar for parsing SMT Lib v2 Model Output String
  */
 grammar SMTModel;
 
 compilationUnit
-    :   'sat (model' functionDeclaration* ')'
+    :   'sat' '(' 'model' functionDeclaration* ')'
     ;
 functionDeclaration
-    :   '(define-fun' varName '()' varType varValue ')' ;
+    :   '(' 'define-fun' varName '()' varType varValue ')' ;
 
 varValue
     :   StringLiteral | IntegerLiteral | BooleanLiteral | FloatingPointLiteral 

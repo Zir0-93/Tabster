@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tabster.AntlrParseResult;
+import com.tabster.SMTFunction;
+
 
 /**
  * Processes expressions to build a SMT-Lib Standard v2.5 description, see
@@ -13,8 +14,17 @@ import com.tabster.AntlrParseResult;
  *
  * @author Muntazir Fadhel
  */
-public class SMTLIBDescriptionBuilder implements AntlrParseResult {
+public class SMTLIBDescription {
 
+	ArrayList<SMTFunction> expressionInputs;
+	private String plainTabularExpression;
+	
+	public SMTLIBDescription(ArrayList<SMTFunction> expressionInputs, String originalTabularExpression) {
+		this.expressionInputs = expressionInputs;
+		this.setPlainTabularExpression(originalTabularExpression);
+		declareTerms(this.expressionInputs);
+		this.smtLIBDescription += " (assert ";
+	}
     /**
      * Maps common expression operators to their equivalent SMT LIB String
      * representation.
@@ -41,19 +51,19 @@ public class SMTLIBDescriptionBuilder implements AntlrParseResult {
         SMT_LIB_OPERATOR_MAP.put("!=", "!=");
     }
 
-    /**
-     * Keeps track of all the variables being used in the SMTLib Description.
-     */
-    private final ArrayList<String> variables = new ArrayList<String>();
-
     private static final String SMT_LIB_DESC_END = ") (check-sat) (get-model) (exit)";
 
-    private static final String SMT_LIB_DESC_BEGIN = "(assert ";
+    private static final String SMT_LIB_DESC_BEGIN = "(set-logic AUFLIRA) (set-option :produce-models true) ";
 
     private String smtLIBDescription = SMT_LIB_DESC_BEGIN;
 
     public String getSMTLIBDescription() {
         return smtLIBDescription + SMT_LIB_DESC_END;
+    }
+    
+    @Override
+    public String toString() {
+    	return getSMTLIBDescription();
     }
 
     public void registerExpressionEnd() {
@@ -85,10 +95,23 @@ public class SMTLIBDescriptionBuilder implements AntlrParseResult {
      * @param variableName
      *            name of the new term to declare
      */
-    public void declareNewTerm(final String variableName) {
-        if (!variables.contains(variableName)) {
-            smtLIBDescription = "(declare-fun " + variableName + " () Int) " + smtLIBDescription;
-            variables.add(variableName);
-        }
+    public void declareTerms(ArrayList<SMTFunction> inputs) {
+    	for (SMTFunction input : inputs) {
+    		smtLIBDescription += "(declare-fun " + input.getVarName() + " () " + input.getType().getValue() + ") ";   
+    	}
     }
+
+	/**
+	 * @return the plainTabularExpression
+	 */
+	public String getPlainTabularExpression() {
+		return plainTabularExpression;
+	}
+
+	/**
+	 * @param plainTabularExpression the plainTabularExpression to set
+	 */
+	public void setPlainTabularExpression(String plainTabularExpression) {
+		this.plainTabularExpression = plainTabularExpression;
+	}
 }

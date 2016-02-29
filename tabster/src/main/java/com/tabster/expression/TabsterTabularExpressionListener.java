@@ -1,30 +1,26 @@
 package com.tabster.expression;
 
-import com.tabster.AntlrParseResult;
-import com.tabster.ITabsterANTLRParseTreeListener;
-
 import expression.TabularExpressionBaseListener;
 import expression.TabularExpressionParser;
 
 /**
- * Once the parsing has done it’s job we’ll get ANTLR to walk the grammar and
- * attach a listener – the listener is notified when any one of our parsing
+ * Once the parsing has done itï¿½s job weï¿½ll get ANTLR to walk the grammar and
+ * attach a listener ï¿½ the listener is notified when any one of our parsing
  * rules is triggered. We can use these listeners to build an appropriate
  * SMT-LIB Description of the given tabular expression in order to pass to any
  * SMT-LIB v2 compliant SMT solver
  *
  * @author Muntazir Fadhel
  */
-public class TabsterTabularExpressionListener extends TabularExpressionBaseListener implements
-ITabsterANTLRParseTreeListener {
+public class TabsterTabularExpressionListener extends TabularExpressionBaseListener {
 
-    private final SMTLIBDescriptionBuilder smtLibDescription;
+    private final SMTLIBDescription smtLibDescription;
 
     /**
      * Public constructor.
      */
-    public TabsterTabularExpressionListener() {
-        smtLibDescription = new SMTLIBDescriptionBuilder();
+    public TabsterTabularExpressionListener(SMTLIBDescription SMTLibDescription) {
+        this.smtLibDescription = SMTLibDescription;
     }
 
     @Override
@@ -126,15 +122,7 @@ ITabsterANTLRParseTreeListener {
         }
     }
 
-    @Override
-    public final void enterVariable(final TabularExpressionParser.VariableContext ctx) {
-
-        smtLibDescription.declareNewTerm(ctx.getText());
-
-    }
-
-    @Override
-    public AntlrParseResult getParseResult() {
+    public SMTLIBDescription getParseResult() {
         return smtLibDescription;
     }
 }

@@ -18,4 +18,4 @@ Translates tabular expressions into the [SMT Exchange format](http://smtlib.gith
         // and retrieve the model of the given expression
         Assert.assertTrue(smtLibDescription
                 .equals("(set-logic AUFLIRA) (set-option :produce-models true) (declare-fun x () Int) (declare-fun y () Bool) (declare-fun z () Real)  (assert (and (or (> x 5 ) (> (- x 3 ) 6 ) ) (= false y ) (< 3.77 z ) ) ) (check-sat) (get-model) (exit)"));
-'''
+

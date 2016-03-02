@@ -18,4 +18,18 @@ Translates tabular expressions into the [SMT Exchange format](http://smtlib.gith
         // and retrieve the model of the given expression
         Assert.assertTrue(smtLibDescription
                 .equals("(set-logic AUFLIRA) (set-option :produce-models true) (declare-fun x () Int) (declare-fun y () Bool) (declare-fun z () Real)  (assert (and (or (> x 5 ) (> (- x 3 ) 6 ) ) (= false y ) (< 3.77 z ) ) ) (check-sat) (get-model) (exit)"));
-
+```
+#### Parsing SMT Exchange Model Ouput
+```java
+   // Scenario: SMT solver has returned output in the SMT Exchange form.
+   String smtModelOutput = "sat (model (define-fun x () Int 6) (define-fun y () Bool false ) (define-fun z () Real 5))";
+   // Specify types of the vars used in the expression ...
+    expressionVars.add(new SMTFunction("x", null, FunctionType.INT));
+    expressionVars.add(new SMTFunction("y", null, FunctionType.BOOL));
+    expressionVars.add(new SMTFunction("z", null, FunctionType.REAL));
+   // Process the output, populates the expression variables with values
+   TabularExpressionService.extractModelFunctionsValues(smtModelOutput, expressionVars);
+   System.out.println(expressionVars.get(0).getValue(); // -> "6"
+   System.out.println(expressionVars.get(1).getValue(); // -> "false"
+   System.out.println(expressionVars.get(2).getValue(); // -> "5"
+```

@@ -4,6 +4,7 @@ Translates tabular expressions into the [SMT Exchange format](http://smtlib.gith
 ### Getting Started
 
 #### Converting a Tabular Expression to The SMT Exchange Format
+```java
     final ArrayList<SMTFunction> expressionVars = new ArrayList<SMTFunction>();
     // The input: A string representing the tabular expression to be translated
     final String unparsedExpression = "((x > 5) || (x - 3) > 6) && false = y && 3.77 < z";
@@ -17,3 +18,4 @@ Translates tabular expressions into the [SMT Exchange format](http://smtlib.gith
         // and retrieve the model of the given expression
         Assert.assertTrue(smtLibDescription
                 .equals("(set-logic AUFLIRA) (set-option :produce-models true) (declare-fun x () Int) (declare-fun y () Bool) (declare-fun z () Real)  (assert (and (or (> x 5 ) (> (- x 3 ) 6 ) ) (= false y ) (< 3.77 z ) ) ) (check-sat) (get-model) (exit)"));
+'''

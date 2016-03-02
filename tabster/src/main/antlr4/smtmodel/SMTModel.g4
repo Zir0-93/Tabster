@@ -1,6 +1,4 @@
-/** A Java 1.7 Tabular Expression grammar for ANTLR v4 derived from the Java 1.7 Grammar for ANTLR v4 
- *  (see https://github.com/antlr/grammars-v4)
- *  Uses ANTLR v4's left-recursive expression notation.
+/** A grammar to parse SMT Lib model outputs
  */
 grammar SMTModel;
 

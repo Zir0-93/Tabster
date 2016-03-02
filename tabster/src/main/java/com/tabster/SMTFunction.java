@@ -1,6 +1,5 @@
 package com.tabster;
 
-
 /**
  * Represents an input to a predicate expression.
  * @author zir0
@@ -9,8 +8,8 @@ package com.tabster;
 public class SMTFunction {
 
     private final String varName;
-    private final String value;
-    private final String type;
+    private String value;
+    private final FunctionType type;
 
     /**
      * @param varName
@@ -20,13 +19,17 @@ public class SMTFunction {
      * @param type
      *            data type of the variable
      */
-    public SMTFunction(final String varName, final String value, final String type) {
+    public SMTFunction(final String varName, final String value, final FunctionType type) {
         this.varName = varName;
         this.value = value;
         this.type = type;
     }
 
-    /**
+    public void setValue(String value) {
+		this.value = value;
+	}
+
+	/**
      * @return name of the variable
      */
     public final
@@ -50,7 +53,7 @@ public class SMTFunction {
     /**
      * @return the type of the variable
      */
-    public String getType() {
+    public FunctionType getType() {
         return type;
     }
 
@@ -66,5 +69,23 @@ public class SMTFunction {
             return true;
         }
         return false;
+    }
+    
+    public enum FunctionType{
+    	
+    	BOOL("Bool"),
+    	INT("Int"),
+    	REAL("Real");
+    	
+    	private final String value;
+    	
+    	private FunctionType(String value) {
+			this.value = value;
+		}
+    	
+    	public String getValue() {
+    		return this.value;
+    	}
+    	
     }
 }

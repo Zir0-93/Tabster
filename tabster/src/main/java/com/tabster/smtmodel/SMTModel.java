@@ -1,8 +1,6 @@
 package com.tabster.smtmodel;
 
 import java.util.ArrayList;
-
-import com.tabster.AntlrParseResult;
 import com.tabster.SMTFunction;
 
 /**
@@ -10,11 +8,15 @@ import com.tabster.SMTFunction;
  *
  * @author Muntazir Fadhel
  */
-public class SMTModel implements AntlrParseResult {
+public class SMTModel {
 
     private String smtModelAsString;
     private ArrayList<SMTFunction> functions = new ArrayList<SMTFunction>();
 
+    public SMTModel(String SMTModelOutput, ArrayList<SMTFunction> expressionVars) {
+    	this.smtModelAsString = SMTModelOutput;
+    	this.functions = expressionVars;
+    }
     /**
      * @param functions
      *            the functions to set

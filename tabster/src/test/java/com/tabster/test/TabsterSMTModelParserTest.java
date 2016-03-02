@@ -3,10 +3,12 @@ package com.tabster.test;
 import java.util.ArrayList;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.tabster.SMTFunction;
 import com.tabster.TabularExpressionService;
+import com.tabster.SMTFunction.FunctionType;
 
 /**
  * Tests to ensure correct parsing and evaluation of SMT-LIB model output.
@@ -15,39 +17,121 @@ import com.tabster.TabularExpressionService;
  */
 public class TabsterSMTModelParserTest {
 
-    @Test
-    public void testParseGeneralSMTModelExpression() throws Exception {
+	private static ArrayList<SMTFunction> expressionVars = new ArrayList<SMTFunction>();
+	
+	private static String varXName = "x";
+	private static FunctionType varXType = FunctionType.INT;
+	private static String varXValue = "6";
+	
+	private static String varZName = "z";
+	private static FunctionType varZType = FunctionType.REAL;
+	private static String varZValue = "5";
+	
+	private static String varYName = "y";
+	private static FunctionType varYType = FunctionType.BOOL;
+	private static String varYValue = "false";
+    
+	
+	@BeforeClass
+    public static void testParseGeneralSMTModelExpression() throws Exception {
 
-        final SMTFunction x = new SMTFunction("x", "57", "Integer");
-        final ArrayList<SMTFunction> expectedResult = new ArrayList<SMTFunction>();
-        expectedResult.add(x);
-        final String unparsedExpression = "sat (model (define-fun x () Int 57) )";
-        final ArrayList<SMTFunction> functions = TabularExpressionService.extractModelFunctions(unparsedExpression);
-        final boolean pass = true;
-        for (int i = 0; i < functions.size(); i++) {
-            if (!functions.get(i).isEqual(expectedResult.get(i))) {
-            }
-        }
-        Assert.assertTrue(pass);
+        expressionVars.add(new SMTFunction(varXName, null, varXType));
+        expressionVars.add(new SMTFunction(varYName, null, varYType));
+        expressionVars.add(new SMTFunction(varZName, null, varZType));
+        final String unparsedExpression = "sat (model(define-fun " + varXName + " () "
+        + varXType.getValue() + " " + varXValue + ")(define-fun " + varYName + " () " 
+        		+ varYType.getValue() + " " + varYValue + " )(define-fun " + varZName 
+        		+ " () " + varZType.getValue() + " " + varZValue + "))";
+        TabularExpressionService.extractModelFunctionsValues(unparsedExpression, expressionVars);
     }
-
+    
     @Test
-    public void testParseGeneralSMTModelExpressionMultipleFunctions() throws Exception {
-
-        final SMTFunction x = new SMTFunction("x", "0", "Real");
-        final SMTFunction y = new SMTFunction("y", "0", "Int");
-        final SMTFunction z = new SMTFunction("z", "false", "Bool");
-        final ArrayList<SMTFunction> expectedResult = new ArrayList<SMTFunction>();
-        expectedResult.add(x);
-        expectedResult.add(y);
-        expectedResult.add(z);
-        final String unparsedExpression = "sat (model (define-fun x () Real 0) (define-fun z () Bool false) (define-fun y () Int 0) )";
-        final ArrayList<SMTFunction> functions = TabularExpressionService.extractModelFunctions(unparsedExpression);
-        final boolean pass = true;
-        for (int i = 0; i < functions.size(); i++) {
-            if (!functions.get(i).isEqual(expectedResult.get(i))) {
-            }
-        }
-        Assert.assertTrue(pass);
+    public void testParsedIntValueCorrectly() {
+    	
+    	boolean pass = false;
+    	
+    	for (SMTFunction var : expressionVars) {
+    		if (var.getVarName().equals(varXName)) {
+    			if (var.getValue().equals(varXValue)) {
+    				pass = true;
+    			}
+    		}
+    	}
+    	Assert.assertTrue(pass);
+    }
+    
+    @Test
+    public void testParsedIntTypeCorrectly() {
+    	
+    	boolean pass = false;
+    	
+    	for (SMTFunction var : expressionVars) {
+    		if (var.getVarName().equals(varXName)) {
+    			if (var.getType().getValue().equals(varXType.getValue())) {
+    				pass = true;
+    			}
+    		}
+    	}
+    	Assert.assertTrue(pass);
+    }
+    
+    @Test
+    public void testParsedRealValueCorrectly() {
+    	
+    	boolean pass = false;
+    	
+    	for (SMTFunction var : expressionVars) {
+    		if (var.getVarName().equals(varZName)) {
+    			if (var.getValue().equals(varZValue)) {
+    				pass = true;
+    			}
+    		}
+    	}
+    	Assert.assertTrue(pass);
+    }
+    
+    @Test
+    public void testParsedRealTypeCorrectly() {
+    	
+    	boolean pass = false;
+    	
+    	for (SMTFunction var : expressionVars) {
+    		if (var.getVarName().equals(varZName)) {
+    			if (var.getType().getValue().equals(varZType.getValue())) {
+    				pass = true;
+    			}
+    		}
+    	}
+    	Assert.assertTrue(pass);
+    }
+    
+    @Test
+    public void testParsedBoolValueCorrectly() {
+    	
+    	boolean pass = false;
+    	
+    	for (SMTFunction var : expressionVars) {
+    		if (var.getVarName().equals(varYName)) {
+    			if (var.getValue().equals(varYValue)) {
+    				pass = true;
+    			}
+    		}
+    	}
+    	Assert.assertTrue(pass);
+    }
+    
+    @Test
+    public void testParsedBoolTypeCorrectly() {
+    	
+    	boolean pass = false;
+    	
+    	for (SMTFunction var : expressionVars) {
+    		if (var.getVarName().equals(varYName)) {
+    			if (var.getType().getValue().equals(varYType.getValue())) {
+    				pass = true;
+    			}
+    		}
+    	}
+    	Assert.assertTrue(pass);
     }
 }

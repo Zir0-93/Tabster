@@ -1,8 +1,12 @@
 package com.tabster.test;
 
+import java.util.ArrayList;
+
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.tabster.SMTFunction;
+import com.tabster.SMTFunction.FunctionType;
 import com.tabster.TabularExpressionService;
 
 /**
@@ -14,61 +18,15 @@ import com.tabster.TabularExpressionService;
 public class TabsterExpressionParserTest {
 
     @Test
-    public void testParseGeneralTabularExpression() throws Exception {
-
-        final String unparsedExpression = "((x > 5) || (x - 3) > 6) && false = y";
+    public void testParsingExpressionWithMixedVarTypes() throws Exception {
+    	final ArrayList<SMTFunction> expressionVars = new ArrayList<SMTFunction>();
+        final String unparsedExpression = "((x > 5) || (x - 3) > 6) && false = y && 3.77 < z";
+        expressionVars.add(new SMTFunction("x", null, FunctionType.INT));
+        expressionVars.add(new SMTFunction("y", null, FunctionType.BOOL));
+        expressionVars.add(new SMTFunction("z", null, FunctionType.REAL));
         final String smtLibDescription = TabularExpressionService
-                .extractSMTLibSolverScript(unparsedExpression);
+                .extractSMTLibSolverScript(unparsedExpression, expressionVars);
         Assert.assertTrue(smtLibDescription
-                .equals("(declare-fun y () Int) (declare-fun x () Int) (assert (and (or (> x 5 ) (> (- x 3 ) 6 ) ) (= false y ) ) ) (check-sat) (get-model) (exit)"));
-    }
-
-    @Test
-    public void testParseRelationalTabularExpression() throws Exception {
-
-        final String unparsedExpression = "(((x > 5) < ((x - 3) > 6)) >= (24 <= 2)) = true";
-        final String smtLibDescription = TabularExpressionService
-                .extractSMTLibSolverScript(unparsedExpression);
-        Assert.assertTrue(smtLibDescription
-                .equals(
-                        "(declare-fun x () Int) (assert (= (>= (< (> x 5 ) (> (- x 3 ) 6 ) ) (<= 24 2 ) ) true ) ) (check-sat) (get-model) (exit)"));
-    }
-
-    @Test
-    public void testParseMathTabularExpression() throws Exception {
-
-        final String unparsedExpression = "((x * 5) < ((x - 3) % 6)) >= (24 / 2)";
-        final String smtLibDescription = TabularExpressionService.extractSMTLibSolverScript(unparsedExpression);
-        Assert.assertTrue(smtLibDescription
-                .equals("(declare-fun x () Int) (assert (>= (< (* x 5 ) (mod (- x 3 ) 6 ) ) (/ 24 2 ) ) ) (check-sat) (get-model) (exit)"));
-    }
-
-    @Test
-    public void testNegationTabularExpression() throws Exception {
-
-        final String unparsedExpression = "!(((x * 5) < ((x - 3) % 6)) >= (24 / 2))";
-        final String smtLibDescription = TabularExpressionService.extractSMTLibSolverScript(unparsedExpression);
-        Assert.assertTrue(smtLibDescription
-                .equals("(declare-fun x () Int) (assert (not (>= (< (* x 5 ) (mod (- x 3 ) 6 ) ) (/ 24 2 ) ) ) ) (check-sat) (get-model) (exit)"));
-    }
-
-    @Test
-    public void testParseLiteralsInTabularExpression() throws Exception {
-
-        final String unparsedExpression = "x = \"str\" || 4 = false";
-        final String smtLibDescription = TabularExpressionService
-                .extractSMTLibSolverScript(unparsedExpression);
-        Assert.assertTrue(smtLibDescription
-                .equals(
-                        "(declare-fun x () Int) (assert (or (= x \"str\" ) (= 4 false ) ) ) (check-sat) (get-model) (exit)"));
-    }
-    @Test
-    public void testDeclareUniqueTermOnceOnly() throws Exception {
-
-        final String unparsedExpression = "x  = 3 || x > 4 || x > 10";
-        final String smtLibDescription = TabularExpressionService.extractSMTLibSolverScript(unparsedExpression);
-        Assert.assertTrue(smtLibDescription
-                .equals(
-                        "(declare-fun x () Int) (assert (or (= x 3 ) (> x 4 ) (> x 10 ) ) ) (check-sat) (get-model) (exit)"));
-    }
+                .equals("(set-logic AUFLIRA) (set-option :produce-models true) (declare-fun x () Int) (declare-fun y () Bool) (declare-fun z () Real)  (assert (and (or (> x 5 ) (> (- x 3 ) 6 ) ) (= false y ) (< 3.77 z ) ) ) (check-sat) (get-model) (exit)"));
+    }    
 }

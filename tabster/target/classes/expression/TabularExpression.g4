@@ -1,29 +1,49 @@
-/** 
- * Grammar for parsing SMT Lib v2 Model Output String
+/** A grammar to parse tabular expressions.
  */
-grammar SMTModel;
+grammar TabularExpression;
 
 compilationUnit
-    :   'sat (model' functionDeclaration* ')'
-    ;
-functionDeclaration
-    :   '(define-fun' varName '()' varType varValue ')' ;
-
-varValue
-    :   StringLiteral | IntegerLiteral | BooleanLiteral | FloatingPointLiteral 
-    ;
-
-varType
-    :   'Int'
-    |   'Bool'
-    |   'Real' 
+    :   expression EOF
     ;
     
-varName
-    :   Identifier
+expression 
+    : relationalExpression (AND relationalExpression)*
+    | relationalExpression (OR relationalExpression)*
+    ;
+    
+relationalExpression 
+    : addingExpression (EQUAL addingExpression)*
+    | addingExpression (NOTEQUAL addingExpression)*
+    | addingExpression (GT addingExpression)*
+    | addingExpression (GE addingExpression)*
+    | addingExpression (LT addingExpression)*
+    | addingExpression (LE addingExpression)*
+    ;
+    
+addingExpression 
+    : multiplyingExpression (ADD multiplyingExpression)*
+    | multiplyingExpression (SUB multiplyingExpression)*
+    ;
+    
+multiplyingExpression 
+    : signExpression (MUL signExpression)*
+    | signExpression (DIV signExpression)*
+    | signExpression (MOD signExpression)*
+    ;
+    
+signExpression 
+    : ((ADD|SUB)* | (BANG|TILDE)) primeExpression
     ;
 
-// §3.10.1 Integer Literals
+primeExpression 
+    : StringLiteral | IntegerLiteral | BooleanLiteral | FloatingPointLiteral | variable | LPAREN expression /* recursion!!! */ RPAREN
+    ;
+      
+variable
+    :  Identifier
+    ;    
+
+// Â§3.10.1 Integer Literals
 
 IntegerLiteral
     :   DecimalIntegerLiteral
@@ -31,7 +51,7 @@ IntegerLiteral
     |   OctalIntegerLiteral
     |   BinaryIntegerLiteral
     ;
-    
+
 fragment
 DecimalIntegerLiteral
     :   DecimalNumeral IntegerTypeSuffix?
@@ -153,7 +173,7 @@ BinaryDigitOrUnderscore
     |   '_'
     ;
 
-// §3.10.2 Floating-Point Literals
+// Â§3.10.2 Floating-Point Literals
 
 FloatingPointLiteral
     :   DecimalFloatingPointLiteral
@@ -214,14 +234,14 @@ BinaryExponentIndicator
     :   [pP]
     ;
 
-// §3.10.3 Boolean Literals
+// Â§3.10.3 Boolean Literals
 
 BooleanLiteral
     :   'true'
     |   'false'
     ;
 
-// §3.10.4 Character Literals
+// Â§3.10.4 Character Literals
 
 CharacterLiteral
     :   '\'' SingleCharacter '\''
@@ -233,7 +253,7 @@ SingleCharacter
     :   ~['\\]
     ;
 
-// §3.10.5 String Literals
+// Â§3.10.5 String Literals
 
 StringLiteral
     :   '"' StringCharacters* '"'
@@ -250,7 +270,7 @@ StringCharacter
     |   EscapeSequence
     ;
 
-// §3.10.6 Escape Sequences for Character and String Literals
+// Â§3.10.6 Escape Sequences for Character and String Literals
 
 fragment
 EscapeSequence
@@ -276,11 +296,60 @@ ZeroToThree
     :   [0-3]
     ;
 
-// §3.10.7 The Null Literal
+// Â§3.10.7 The Null Literal
 
 NullLiteral
     :   'null'
     ;
+
+// Â§3.11 Separators
+
+LPAREN          : '(';
+RPAREN          : ')';
+LBRACE          : '{';
+RBRACE          : '}';
+LBRACK          : '[';
+RBRACK          : ']';
+SEMI            : ';';
+COMMA           : ',';
+DOT             : '.';
+
+// Â§3.12 Operators
+
+GT              : '>';
+LT              : '<';
+BANG            : '!';
+TILDE           : '~';
+QUESTION        : '?';
+COLON           : ':';
+EQUAL           : '=';
+LE              : '<=';
+GE              : '>=';
+NOTEQUAL        : '!=';
+AND             : '&&';
+OR              : '||';
+INC             : '++';
+DEC             : '--';
+ADD             : '+';
+SUB             : '-';
+MUL             : '*';
+DIV             : '/';
+BITAND          : '&';
+BITOR           : '|';
+CARET           : '^';
+MOD             : '%';
+ASSIGN          : '==';
+ADD_ASSIGN      : '+=';
+SUB_ASSIGN      : '-=';
+MUL_ASSIGN      : '*=';
+DIV_ASSIGN      : '/=';
+AND_ASSIGN      : '&=';
+OR_ASSIGN       : '|=';
+XOR_ASSIGN      : '^=';
+MOD_ASSIGN      : '%=';
+LSHIFT_ASSIGN   : '<<=';
+RSHIFT_ASSIGN   : '>>=';
+URSHIFT_ASSIGN  : '>>>=';
 
 // Â§3.8 Identifiers 
 

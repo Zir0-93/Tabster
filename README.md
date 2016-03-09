@@ -1,5 +1,5 @@
 # tabster
-Translates tabular expressions into the [SMT Exchange format](http://smtlib.github.io/jSMTLIB/SMTLIBTutorial.pdf) descriptions using ANTLRv4 Tree Listeners which can be used as input to an SMT solver. Tabster can also solve these expressions if CVC4 is installed on your machine.
+Translates predicate expressions into the [SMT Exchange format](http://smtlib.github.io/jSMTLIB/SMTLIBTutorial.pdf) descriptions using ANTLRv4 Tree Listeners which can be used as input to an SMT solver. Tabster can also solve these expressions if CVC4 is installed on your machine.
 
 ### Getting Started
 Import Tabster jar from /target folder. To build, run a maven build using goals:"clean compile assembly:single", this should produce the jar in the /target folder. Moving artifacts to maven soon.

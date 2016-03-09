@@ -1,0 +1,63 @@
+\documentclass [11pt]{article}
+
+\usepackage[T1]{fontenc}
+ \usepackage{url}
+ 
+\title{ Converting Predicate Expressions to SMT-LIB Compliant Languages}
+\author{Muntazir Fadhel (muntazirfadhel@gmail.com)\\McMaster University}
+
+\begin{document}
+\maketitle
+\nocite{*}
+\section*{1 Overview}
+Satisfiability Modulo Theories (SMT) is an area of automated deduction that studies methods
+for  checking  the  satisfiability  of  first-order  formulas  with  respect  to  some  logical  theory
+T of interest. Many solvers currently exist that are able to implement a procedure for satisfiability modulo given some theory. However, the conversion of logical expressions into a form that can be understood by an SMT solver is a daunting task. It is no surprise then that one of the main motivating factors being the creation of the SMT-LIB language involved standardizing SMT solver input and output languages.
+\newline
+\newline
+ The proposed implementation project consists of developing a software system that is able to process predicate expressions and output SMT-LIB descriptions of these expressions. The result can  be further utilized by SMT solvers to determine the satisfiability of and to generate counter examples for the original inputted predicate expressions. The system will be developed as Java project and published as a REST API to allow for the integration of the core functionality into other software projects in the future.
+
+\section*{2 Implementation}
+Development of the system will start with the design of an ANTLR v4 grammar that will be used to generate a parser for creating abstract syntax trees (AST) representing the inputted predicate expressions. Fortunately, ANTLR maintains LL(*) based parsing techniques which facilitate the collection of the mathematical symbols involved in a expression early on in the parsing operation. Therefore, we can utillize ANTLR parse tree listeners to recursively build a suitable SMT-LIB description of the input predicate expression as key parsing rules are triggered by the listener. 
+
+The alphabet describing the first order logic that may be used in the user inputted expressions consits of:
+
+\begin{enumerate}
+	\item The quantifier symbols {$\forall$} and {$\exists$}.
+	
+	\item The logical connectives: {$\wedge$} for conjunction, {$\vee$} for disjunction, {$\rightarrow$} for implication, {$\leftrightarrow$} for bi-conditionals and {$\neg$} for negation.
+	
+	\item Parentheses, brackets, and other punctuation symbols. The choice of such symbols varies depending on context.
+	
+	\item An infinite set of variables, often denoted by lowercase letters at the end of the alphabet x, y, z.
+	\item Inequality symbols including {$\geq$}, {$\leq$}, >, < and =.
+	
+	\item The mathematical operators {$\div$}, {$\times$}, +, -, and {$\bmod$}.
+\end{enumerate}
+
+\section*{3 Resources}
+The project will heavily rely on the SMT-LIB v2 tutorial[1] published by David R. Cok in order to ensure the system is designing correct SMT-LIB descriptions. Additionally, we plan to consult course notes[2] regarding the use of ANTLR.
+
+\section*{4 Testing}
+An automated J-Unit based test suite will be developed to ensure the correct functioning of the system. The tests should ensure that all allowable predicate symbols are correctly translated into the corresponding SMT-LIB output. Additionally, tests will be developed to ensure the system returns appropriate input in the case where invalid data has been submitted. Lastly, the generated SMT-LIB output from the system will be tested with real SMT solvers by ensuring that they can be read by an SMT solver to determine satisfiability and to generate solutions for the original predicate expressions if possible.
+
+
+
+\bibliographystyle{IEEEannot}
+\begin{thebibliography}{2}
+	
+	\bibitem{1}
+	David R. Cok,
+	\emph{"The SMT-LIB v2 Language and Tools: A Tutorial"},
+	GrammaTech, Inc.
+	Version 1.2.1
+	Novermber 23, 2013
+	
+	\bibitem{2}
+	Emil Sekerinski,
+	\emph"4TB3 course slides},
+	\url{http://www.cas.mcmaster.ca/~cs4tb3/home.html}
+	
+\end{thebibliography}
+\bibliography{annot}
+\end{document}

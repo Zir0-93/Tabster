@@ -1,3 +1,5 @@
+[Explore Tabster](http://clarityviews.ca:9080/github/java/zir0-93/tabster)
+
 # tabster
 Translates predicate expressions into the [SMT Exchange format](http://smtlib.github.io/jSMTLIB/SMTLIBTutorial.pdf) descriptions using ANTLRv4 Tree Listeners which can be used as input to an SMT solver. Tabster can also solve these expressions if CVC4 is installed on your machine.
 

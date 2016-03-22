@@ -10,8 +10,16 @@ functionDeclaration
     :   '(define-fun' varName '()' varType varValue ')' ;
 
 varValue
-    :   StringLiteral | IntegerLiteral | BooleanLiteral | FloatingPointLiteral 
+    :   StringLiteral | IntegerLiteral | BooleanLiteral | FloatingPointLiteral | divisionStatement
     ;
+
+exclamationStatement  
+	:  Identifier '!' IntegerLiteral
+	;
+	
+divisionStatement
+	: '(' '/' FloatingPointLiteral  FloatingPointLiteral ')'
+	;
 
 varType
     :   'Int'
@@ -20,7 +28,8 @@ varType
     ;
     
 varName
-    :   Identifier
+    :   Identifier '!' IntegerLiteral
+    |	Identifier
     ;
 
 // §3.10.1 Integer Literals

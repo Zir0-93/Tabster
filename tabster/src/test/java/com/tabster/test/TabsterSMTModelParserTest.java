@@ -25,12 +25,19 @@ public class TabsterSMTModelParserTest {
 	
 	private static String varZName = "z";
 	private static FunctionType varZType = FunctionType.REAL;
-	private static String varZValue = "5";
+	private static String varZValueString = "(/ 477.0 100.0)";
+	private static String varZValue = "4.77";
 	
+	private static String varYNameModelString = "y!0";
 	private static String varYName = "y";
 	private static FunctionType varYType = FunctionType.BOOL;
 	private static String varYValue = "false";
     
+	private static String varANameModelString = "a!1";
+	private static String varAName = "a";
+	private static FunctionType varAType = FunctionType.INT;
+	private static String varAStringValue = "(/ 477.0 100.0)";
+	private static String varAValue = "4";
 	
 	@BeforeClass
     public static void testParseGeneralSMTModelExpression() throws Exception {
@@ -38,10 +45,13 @@ public class TabsterSMTModelParserTest {
         expressionVars.add(new SMTFunction(varXName, null, varXType));
         expressionVars.add(new SMTFunction(varYName, null, varYType));
         expressionVars.add(new SMTFunction(varZName, null, varZType));
+        expressionVars.add(new SMTFunction(varAName, null, varAType));
+        
         final String unparsedExpression = "sat (model(define-fun " + varXName + " () "
-        + varXType.getValue() + " " + varXValue + ")(define-fun " + varYName + " () " 
+        + varXType.getValue() + " " + varXValue + ")(define-fun " + varYNameModelString + " () " 
         		+ varYType.getValue() + " " + varYValue + " )(define-fun " + varZName 
-        		+ " () " + varZType.getValue() + " " + varZValue + "))";
+        		+ " () " + varZType.getValue() + " " + varZValueString + ") (define-fun " + varANameModelString 
+        		+ " () " + varAType.getValue() + " " + varAStringValue + "))";
         TabularExpressionService.extractModelFunctionsValues(unparsedExpression, expressionVars);
     }
     
@@ -83,6 +93,21 @@ public class TabsterSMTModelParserTest {
     	for (SMTFunction var : expressionVars) {
     		if (var.getVarName().equals(varZName)) {
     			if (var.getValue().equals(varZValue)) {
+    				pass = true;
+    			}
+    		}
+    	}
+    	Assert.assertTrue(pass);
+    }
+    
+    @Test
+    public void testParsedRealValueAsDivisionStatementCorrectly() {
+    	
+    	boolean pass = false;
+    	
+    	for (SMTFunction var : expressionVars) {
+    		if (var.getVarName().equals(varAName)) {
+    			if (var.getValue().equals(varAValue)) {
     				pass = true;
     			}
     		}

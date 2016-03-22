@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.tabster.SMTFunction;
 
-
 /**
  * Processes expressions to build a SMT-Lib Standard v2.5 description, see
  * http://smtlib.cs.uiowa.edu/papers/smt-lib-reference-v2.5-r2015-06-28.pdf for
@@ -49,6 +48,8 @@ public class SMTLIBDescription {
         SMT_LIB_OPERATOR_MAP.put(">=", ">=");
         SMT_LIB_OPERATOR_MAP.put("%", "mod");
         SMT_LIB_OPERATOR_MAP.put("!=", "!=");
+        SMT_LIB_OPERATOR_MAP.put("∀", "forall");
+        SMT_LIB_OPERATOR_MAP.put("∃", "exists");
     }
 
     private static final String SMT_LIB_DESC_END = ") (check-sat) (get-model) (exit)";
@@ -113,5 +114,21 @@ public class SMTLIBDescription {
 	 */
 	public void setPlainTabularExpression(String plainTabularExpression) {
 		this.plainTabularExpression = plainTabularExpression;
+	}
+
+	public void registerPredicateExpressionStart(String quantifierSymbol,
+			String variable) throws Exception {
+		String type = null;
+		for (SMTFunction possibleMatchingInput : expressionInputs) {
+			if (possibleMatchingInput.getVarName().equals(variable)) {
+				type = possibleMatchingInput.getType().getValue();
+			}
+		}
+		if (type == null) {
+			throw new Exception("Could not translate predicate expression!");
+		}
+		registerExpressionStart(quantifierSymbol);
+		smtLIBDescription += "((" + variable + " " + type + ")) "; 
+		
 	}
 }

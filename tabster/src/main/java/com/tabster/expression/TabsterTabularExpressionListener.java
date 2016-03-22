@@ -40,6 +40,26 @@ public class TabsterTabularExpressionListener extends TabularExpressionBaseListe
             smtLibDescription.registerExpressionEnd();
         }
     }
+    @Override
+    public final void exitPredicateExpression(final TabularExpressionParser.PredicateExpressionContext ctx) {
+
+    	smtLibDescription.registerExpressionEnd();
+    }
+
+    @Override
+    public final void enterPredicateSymbolVariablePair(final TabularExpressionParser.PredicateSymbolVariablePairContext ctx) {
+
+    	try {
+    		if (ctx.FORALL() != null) {
+    			smtLibDescription.registerPredicateExpressionStart(ctx.FORALL().getText(), ctx.variable().getText());
+
+    		} if (ctx.EXISTS() != null) {
+    			smtLibDescription.registerPredicateExpressionStart(ctx.EXISTS().getText(), ctx.variable().getText());
+    		}
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
 
     @Override
     public final void enterRelationalExpression(final TabularExpressionParser.RelationalExpressionContext ctx) {

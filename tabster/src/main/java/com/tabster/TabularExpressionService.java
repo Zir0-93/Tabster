@@ -91,7 +91,7 @@ public final class TabularExpressionService {
     		writer.print(SMTLibString);
     		writer.close();
     		// interact with terminal to check satisfiability and solve SMT Lib String
-    		String command = "cvc4 " + f.getAbsolutePath();
+    		String command = "z3 -smt2 " + f.getAbsolutePath();
     		ProcessBuilder pb = new ProcessBuilder("bash", "-c", command);
     		pb.redirectErrorStream(true);
     		Process shell = pb.start();

@@ -18,8 +18,18 @@ relationalExpression
     | addingExpression (GE addingExpression)*
     | addingExpression (LT addingExpression)*
     | addingExpression (LE addingExpression)*
+    | predicateExpression
     ;
-    
+
+predicateExpression
+	: '{' predicateSymbolVariablePair ':' expression '}'
+	;
+	
+predicateSymbolVariablePair
+	: FORALL variable
+	| EXISTS variable
+	;
+	
 addingExpression 
     : multiplyingExpression (ADD multiplyingExpression)*
     | multiplyingExpression (SUB multiplyingExpression)*
@@ -350,6 +360,8 @@ MOD_ASSIGN      : '%=';
 LSHIFT_ASSIGN   : '<<=';
 RSHIFT_ASSIGN   : '>>=';
 URSHIFT_ASSIGN  : '>>>=';
+FORALL			: '∀';
+EXISTS			: '∃';
 
 // Â§3.8 Identifiers 
 

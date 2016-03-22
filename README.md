@@ -11,7 +11,7 @@ Import Tabster jar from /target folder. To build, run a maven build using goals:
 ```java
     final ArrayList<SMTFunction> expressionVars = new ArrayList<SMTFunction>();
     // The input: A string representing the tabular expression to be translated
-    final String unparsedExpression = "((x > 5) || (x - 3) > 6) && false = y && 3.77 < z";
+    final String unparsedExpression = "{∃x:((x > 5) || (x - 3) > 6) && false = y && 3.77 < z}";
     // Specify types of the vars used in the expression ...
     expressionVars.add(new SMTFunction("x", null, FunctionType.INT));
     expressionVars.add(new SMTFunction("y", null, FunctionType.BOOL));
@@ -21,7 +21,7 @@ Import Tabster jar from /target folder. To build, run a maven build using goals:
         // The returned String should contain an SMT Lib compliant script to check the satisfiability 
         // and retrieve the model of the given expression
         Assert.assertTrue(smtLibDescription
-                .equals("(set-logic AUFLIRA) (set-option :produce-models true) (declare-fun x () Int) (declare-fun y () Bool) (declare-fun z () Real)  (assert (and (or (> x 5 ) (> (- x 3 ) 6 ) ) (= false y ) (< 3.77 z ) ) ) (check-sat) (get-model) (exit)"));
+                .equals("(set-logic AUFLIRA) (set-option :produce-models true) (declare-fun x () Int) (declare-fun y () Bool) (declare-fun z () Real)  (assert (exists ((x Int)) (and (or (> x 5 ) (> (- x 3 ) 6 ) ) (= false y ) (< 3.77 z ) ) ) ) (check-sat) (get-model) (exit)"));
 ```
 #### Parsing SMT Exchange Model Ouput
 ```java

@@ -1,6 +1,8 @@
 package com.tabster.smtmodel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+
 import com.tabster.SMTFunction;
 
 /**
@@ -8,15 +10,18 @@ import com.tabster.SMTFunction;
  *
  * @author Muntazir Fadhel
  */
-public class SMTModel {
+public class SMTModel implements Serializable{
 
     private String smtModelAsString;
     private ArrayList<SMTFunction> functions = new ArrayList<SMTFunction>();
+	private boolean sat;
 
     public SMTModel(String SMTModelOutput, ArrayList<SMTFunction> expressionVars) {
     	this.smtModelAsString = SMTModelOutput;
     	this.functions = expressionVars;
     }
+    
+    public SMTModel() {}
     /**
      * @param functions
      *            the functions to set
@@ -24,6 +29,20 @@ public class SMTModel {
     public void setFunctions(final ArrayList<SMTFunction> functions) {
         this.functions = functions;
     }
+    
+	/**
+	 * @return the sat
+	 */
+	public boolean isSat() {
+		return sat;
+	}
+
+	/**
+	 * @param sat the sat to set
+	 */
+	public void setSat(boolean sat) {
+		this.sat = sat;
+	}
 
     /**
      * @return the functions

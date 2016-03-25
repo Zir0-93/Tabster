@@ -1,16 +1,32 @@
 package com.tabster;
 
+import java.io.Serializable;
+
 /**
  * Represents an input to a predicate expression.
  * @author zir0
  *
  */
-public class SMTFunction {
+public class SMTFunction implements Serializable{
 
-    private final String varName;
-    private String value;
-    private final FunctionType type;
+    /**
+	 * @param varName the varName to set
+	 */
+	public void setVarName(String varName) {
+		this.varName = varName;
+	}
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(FunctionType type) {
+		this.type = type;
+	}
 
+	private String varName = null;
+    private String value = null;;
+    private FunctionType type = null;
+
+    public SMTFunction() {}
     /**
      * @param varName
      *            Name of the variable
@@ -71,13 +87,17 @@ public class SMTFunction {
         return false;
     }
     
-    public enum FunctionType{
+    public enum FunctionType {
     	
     	BOOL("Bool"),
     	INT("Int"),
     	REAL("Real");
     	
-    	private final String value;
+    	private String value = "";
+    	
+    	private FunctionType() {
+    		
+    	}
     	
     	private FunctionType(String value) {
 			this.value = value;
@@ -85,7 +105,6 @@ public class SMTFunction {
     	
     	public String getValue() {
     		return this.value;
-    	}
-    	
+    	}    	
     }
 }

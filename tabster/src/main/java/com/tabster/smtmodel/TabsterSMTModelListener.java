@@ -20,6 +20,7 @@ public class TabsterSMTModelListener extends SMTModelBaseListener {
 
 	private final SMTModel model;
 	private String currentVarName;
+	private boolean sat;
 
 	/**
 	 * Public constructor.
@@ -50,6 +51,16 @@ public class TabsterSMTModelListener extends SMTModelBaseListener {
 				var.setValue(discoveredVarValue);
 			}
 		}    	
+	}
+	
+	@Override
+	public final void enterSatResult(final SMTModelParser.SatResultContext ctx) {
+
+		if (ctx.getText().equals("unsat")) {
+			model.setSat(false);
+		} else {
+			model.setSat(true);
+		}
 	}
 
 	@Override

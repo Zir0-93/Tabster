@@ -7,8 +7,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.tabster.SMTFunction;
-import com.tabster.TabularExpressionService;
+import com.tabster.TabsterService;
 import com.tabster.SMTFunction.FunctionType;
+import com.tabster.smtmodel.SMTModel;
 
 /**
  * Tests to ensure correct parsing and evaluation of SMT-LIB model output.
@@ -52,7 +53,8 @@ public class TabsterSMTModelParserTest {
         		+ varYType.getValue() + " " + varYValue + " )(define-fun " + varZName 
         		+ " () " + varZType.getValue() + " " + varZValueString + ") (define-fun " + varANameModelString 
         		+ " () " + varAType.getValue() + " " + varAStringValue + "))";
-        TabularExpressionService.extractModelFunctionsValues(unparsedExpression, expressionVars);
+       SMTModel model = TabsterService.extractModelFunctionsValues(unparsedExpression, expressionVars);
+       expressionVars = model.getFunctions();
     }
     
     @Test

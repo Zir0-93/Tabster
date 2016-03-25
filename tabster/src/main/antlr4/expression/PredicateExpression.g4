@@ -1,16 +1,34 @@
 /** A grammar to parse tabular expressions.
  */
-grammar TabularExpression;
+grammar PredicateExpression;
 
 compilationUnit
     :   expression EOF
     ;
     
 expression 
-    : relationalExpression (AND relationalExpression)*
-    | relationalExpression (OR relationalExpression)*
+    : relationalExpression (andsign relationalExpression)*
+    | relationalExpression (orsign relationalExpression)*    
+    | notsign expression
     ;
-    
+
+notsign
+	: BANG
+	| TILDE
+	;
+	
+andsign
+	: AND
+	| LOGICAND
+	| BITAND
+	;
+	
+orsign
+	: OR
+	| LOGICOR
+	| BITOR
+	;
+	   
 relationalExpression 
     : addingExpression (EQUAL addingExpression)*
     | addingExpression (NOTEQUAL addingExpression)*
@@ -362,6 +380,8 @@ RSHIFT_ASSIGN   : '>>=';
 URSHIFT_ASSIGN  : '>>>=';
 FORALL			: '∀';
 EXISTS			: '∃';
+LOGICAND		: '∧';
+LOGICOR			: '∨'; 
 
 // Â§3.8 Identifiers 
 

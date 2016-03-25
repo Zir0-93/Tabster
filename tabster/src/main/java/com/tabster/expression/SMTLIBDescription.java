@@ -17,12 +17,30 @@ public class SMTLIBDescription {
 
 	ArrayList<SMTFunction> expressionInputs;
 	private String plainTabularExpression;
-	
-	public SMTLIBDescription(ArrayList<SMTFunction> expressionInputs, String originalTabularExpression) {
+	private boolean getModel;
+	private boolean checkSat;
+	public SMTLIBDescription(ArrayList<SMTFunction> expressionInputs, String originalTabularExpression, boolean checkSat, boolean getModel) {
 		this.expressionInputs = expressionInputs;
 		this.setPlainTabularExpression(originalTabularExpression);
 		declareTerms(this.expressionInputs);
 		this.smtLIBDescription += " (assert ";
+		this.checkSat = checkSat;
+		this.getModel = getModel;
+	}
+	
+	public String getEndingString() {
+		
+		 String SMT_LIB_DESC_END = ") ";
+
+		if (checkSat) {
+			SMT_LIB_DESC_END += "(check-sat) ";
+		}
+		if (getModel) {
+			SMT_LIB_DESC_END += "(get-model) ";
+		}
+		SMT_LIB_DESC_END += "(exit)";
+		
+		return SMT_LIB_DESC_END;
 	}
     /**
      * Maps common expression operators to their equivalent SMT LIB String
@@ -50,16 +68,17 @@ public class SMTLIBDescription {
         SMT_LIB_OPERATOR_MAP.put("!=", "!=");
         SMT_LIB_OPERATOR_MAP.put("∀", "forall");
         SMT_LIB_OPERATOR_MAP.put("∃", "exists");
+        SMT_LIB_OPERATOR_MAP.put("∧", "and");
+        SMT_LIB_OPERATOR_MAP.put("∨", "or");
     }
 
-    private static final String SMT_LIB_DESC_END = ") (check-sat) (get-model) (exit)";
-
+   
     private static final String SMT_LIB_DESC_BEGIN = "(set-logic AUFLIRA) (set-option :produce-models true) ";
 
     private String smtLIBDescription = SMT_LIB_DESC_BEGIN;
 
     public String getSMTLIBDescription() {
-        return smtLIBDescription + SMT_LIB_DESC_END;
+        return smtLIBDescription + getEndingString();
     }
     
     @Override

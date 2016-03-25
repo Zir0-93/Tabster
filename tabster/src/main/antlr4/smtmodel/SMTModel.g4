@@ -4,8 +4,14 @@
 grammar SMTModel;
 
 compilationUnit
-    :   'sat (model' functionDeclaration* ')'
+    :   satResult? ('(model' functionDeclaration* ')')?
     ;
+    
+satResult
+	: 'sat'
+	| 'unsat'
+	;
+	
 functionDeclaration
     :   '(define-fun' varName '()' varType varValue ')' ;
 

@@ -60,7 +60,7 @@ multiplyingExpression
     ;
     
 signExpression 
-    : ((ADD|SUB)* | (BANG|TILDE)) primeExpression
+    : ((ADD|SUB) | (BANG|TILDE))? primeExpression
     ;
 
 primeExpression 

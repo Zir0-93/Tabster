@@ -89,4 +89,17 @@ public class TabsterPredicateExpressionParserTest {
                 .equals("(set-logic AUFLIRA) (set-option :produce-models true) (declare-fun x () Int) (declare-fun y () Int)  (assert (exists ((x Int)) (exists ((y Int)) (> x y ) ) ) ) (check-sat) (get-model) (exit)"));
     }
     
+    
+    @Test
+    public void testParsingExpressionWithNegativeIntegers() throws Exception {
+    	final ArrayList<SMTFunction> expressionVars = new ArrayList<SMTFunction>();
+        final String unparsedExpression = "!(x > -5 & !(y < -2)) ∨ !(z)";
+        expressionVars.add(new SMTFunction("x", null, FunctionType.INT));
+        expressionVars.add(new SMTFunction("y", null, FunctionType.REAL));
+        expressionVars.add(new SMTFunction("z", null, FunctionType.BOOL));
+        final String smtLibDescription = TabsterService
+                .extractSMTLibSolverScript(unparsedExpression, expressionVars, true, true);
+        Assert.assertTrue(smtLibDescription
+                .equals("(set-logic AUFLIRA) (set-option :produce-models true) (declare-fun x () Int) (declare-fun y () Real) (declare-fun z () Bool)  (assert (or (not (and (> x -5 ) (not (< y -2 ) ) ) ) (not z ) ) ) (check-sat) (get-model) (exit)"));
+    } 
 }

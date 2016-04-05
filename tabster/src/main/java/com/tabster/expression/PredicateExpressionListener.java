@@ -125,13 +125,6 @@ public class PredicateExpressionListener extends PredicateExpressionBaseListener
     }
 
     @Override
-    public final void enterSignExpression(final PredicateExpressionParser.SignExpressionContext ctx) {
-        if (ctx.BANG() != null || ctx.TILDE() != null) {
-            smtLibDescription.registerExpressionStart(ctx.BANG().getText());
-        }
-    }
-
-    @Override
     public final void exitSignExpression(final PredicateExpressionParser.SignExpressionContext ctx) {
         if (ctx.BANG() != null || ctx.TILDE() != null) {
             smtLibDescription.registerExpressionEnd();
@@ -139,9 +132,13 @@ public class PredicateExpressionListener extends PredicateExpressionBaseListener
     }
 
     @Override
-    public final void enterPrimeExpression(final PredicateExpressionParser.PrimeExpressionContext ctx) {
-        if (ctx.expression() == null) {
+    public final void enterSignExpression(final PredicateExpressionParser.SignExpressionContext ctx) {
+        if (ctx.primeExpression().expression() == null) {
             smtLibDescription.registerNewTerm(ctx.getText());
+        } else {
+        	if (ctx.BANG() != null || ctx.TILDE() != null) {
+                smtLibDescription.registerExpressionStart(ctx.BANG().getText());
+            }
         }
     }
 

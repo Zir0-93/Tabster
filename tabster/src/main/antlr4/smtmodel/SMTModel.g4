@@ -13,10 +13,10 @@ satResult
 	;
 	
 functionDeclaration
-    :   '(define-fun' varName '()' varType varValue ')' ;
+    :   '(define-fun' varName '()' varType  varValue  ')' ;
 
 varValue
-    :   StringLiteral | IntegerLiteral | BooleanLiteral | FloatingPointLiteral | divisionStatement
+    :   StringLiteral | '('? IntegerLiteral ')'? | BooleanLiteral | '('? FloatingPointLiteral ')'? | divisionStatement
     ;
 
 exclamationStatement  
@@ -41,10 +41,10 @@ varName
 // §3.10.1 Integer Literals
 
 IntegerLiteral
-    :   DecimalIntegerLiteral
-    |   HexIntegerLiteral
-    |   OctalIntegerLiteral
-    |   BinaryIntegerLiteral
+    :   '- '? DecimalIntegerLiteral
+    |   '- '? HexIntegerLiteral
+    |   '- '? OctalIntegerLiteral
+    |   '- ' ? BinaryIntegerLiteral
     ;
     
 fragment
@@ -171,8 +171,8 @@ BinaryDigitOrUnderscore
 // §3.10.2 Floating-Point Literals
 
 FloatingPointLiteral
-    :   DecimalFloatingPointLiteral
-    |   HexadecimalFloatingPointLiteral
+    :  '-'? DecimalFloatingPointLiteral
+    |   '-'? HexadecimalFloatingPointLiteral
     ;
 
 fragment

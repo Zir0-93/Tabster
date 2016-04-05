@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -58,8 +59,8 @@ public final class TabsterService {
         PredicateExpressionListener listener = new PredicateExpressionListener(description);
         walker.walk((ParseTreeListener) listener, tree);
         result = listener.getParseResult().toString();
-    	} catch (Exception e) {
-    		System.out.println("Could not process input predicate expression, are you sure it well-formatted?");
+    	} catch (ParseCancellationException e) {
+    		System.out.println("Error while parsing input expression:: " + tabularExpression);
     		e.printStackTrace();
     	}
         return result;

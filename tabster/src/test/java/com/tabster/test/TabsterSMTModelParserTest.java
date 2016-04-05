@@ -22,7 +22,7 @@ public class TabsterSMTModelParserTest {
 	
 	private static String varXName = "x";
 	private static FunctionType varXType = FunctionType.INT;
-	private static String varXValue = "6";
+	private static String varXValue = "(- 6)";
 	
 	private static String varZName = "z";
 	private static FunctionType varZType = FunctionType.REAL;

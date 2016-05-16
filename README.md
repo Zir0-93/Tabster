@@ -1,6 +1,6 @@
 # tabster
 
-[![Clarity View](http://clarity.mybluemix.net/badge)](http://clarity.mybluemix.net/github/clarity-team/tabster)
+[![Clarity Views Label](http://clarityviews.ca/badge)](http://clarityviews.ca/github/clarity-team/tabster?projectName=tabster)
 
 Translates predicate expressions into the [SMT Exchange format](http://smtlib.github.io/jSMTLIB/SMTLIBTutorial.pdf) descriptions using ANTLRv4 Tree Listeners which can be used as input to an SMT solver. Tabster can also solve these expressions if CVC4 is installed on your machine.
 

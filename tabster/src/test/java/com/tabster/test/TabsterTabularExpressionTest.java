@@ -9,7 +9,6 @@ import com.tabster.PropertyVerificationResult;
 import com.tabster.SMTFunction;
 import com.tabster.TabularExpression;
 import com.tabster.SMTFunction.FunctionType;
-import com.tabster.smtmodel.SMTModel;
 
 public class TabsterTabularExpressionTest {
 
@@ -97,7 +96,7 @@ public class TabsterTabularExpressionTest {
 		expressionVars.add(new SMTFunction("x", null, FunctionType.INT));
 		expressionVars.add(new SMTFunction("y", null, FunctionType.BOOL));
 		PropertyVerificationResult result = new TabularExpression(tabularExpression, expressionVars).checkDisjointness();
-		Assert.assertTrue(result.satisfied() == false);
+		Assert.assertTrue(result.satisfied() == true);
 	}
 	
 	@Test
@@ -127,10 +126,10 @@ public class TabsterTabularExpressionTest {
         //expressions.add("(x < 0) & (y < 3)");
         expressionVars.add(new SMTFunction("x", null, FunctionType.INT));
         expressionVars.add(new SMTFunction("y", null, FunctionType.INT));
-        PropertyVerificationResult result = new TabularExpression(expressions, expressionVars).completenessModel();
-        Assert.assertTrue(result.satisfied());
-        result = new TabularExpression(expressions, expressionVars).disjointnessModel();
+        PropertyVerificationResult result = new TabularExpression(expressions, expressionVars).checkCompleteness();
         Assert.assertTrue(result.satisfied() == false);
+        result = new TabularExpression(expressions, expressionVars).checkDisjointness();
+        Assert.assertTrue(result.satisfied() == true);
 		
 	}
 }

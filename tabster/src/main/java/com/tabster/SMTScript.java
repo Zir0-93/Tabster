@@ -3,13 +3,12 @@ package com.tabster;
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
 
-import sun.nio.cs.StandardCharsets;
 
-public class SMTScript{
+public class SMTScript {
     
     private String script;
     
@@ -20,7 +19,7 @@ public class SMTScript{
     public String run() throws Exception {
     	// create a temp file    	
     	File f = File.createTempFile("smt", ".smt2");
-    	PrintWriter writer = new PrintWriter(f);
+    	PrintWriter writer = new PrintWriter(f, StandardCharsets.UTF_8.toString());
     	writer.print(this.script);
     	writer.close();
     	// interact with terminal to check satisfiability and solve SMT Lib String

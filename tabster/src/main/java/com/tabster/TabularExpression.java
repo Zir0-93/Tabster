@@ -1,31 +1,9 @@
 package com.tabster;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.BailErrorStrategy;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.misc.ParseCancellationException;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.apache.commons.io.IOUtils;
-
-import com.tabster.expression.SMTLIBDescription;
-import com.tabster.expression.PredicateExpressionListener;
 import com.tabster.smtmodel.SMTModel;
-import com.tabster.smtmodel.TabsterSMTModelListener;
-
-import expression.PredicateExpressionLexer;
-import expression.PredicateExpressionParser;
 import com.tabster.expression.PredicateExpression;
-import smtmodel.SMTModelLexer;
-import smtmodel.SMTModelParser;
 
 /**
  * Service class for parsing/solving tabular expressions.
@@ -51,13 +29,13 @@ public final class TabularExpression {
     public PropertyVerificationResult checkCompleteness() throws Exception {
 
         // to check for completion, check if the following expression is satisfiable:
-        String completionCheckExpression = "";
+        StringBuilder completionCheckExpression = new StringBuilder();
         for (String predExpr : tabularExpression) {
-            completionCheckExpression += "!(" + predExpr + ") ∧ ";
+            completionCheckExpression.append("!(" + predExpr + ") ∧ ");
         }
         // remove the last LOGICAL AND
-        completionCheckExpression = completionCheckExpression.substring(0, completionCheckExpression.length() - 2);
-        SMTModel model = new SMTModel(new PredicateExpression(completionCheckExpression, this.expressionVars).solve(), this.expressionVars);
+        String completionCheckExpressionStr = completionCheckExpression.toString().substring(0, completionCheckExpression.length() - 2);
+        SMTModel model = new SMTModel(new PredicateExpression(completionCheckExpressionStr, this.expressionVars).solve(), this.expressionVars);
         if (model.sat()) {
             return new PropertyVerificationResult(false, model.functions());
         } else {

@@ -15,10 +15,10 @@ import com.tabster.SMTFunction;
  */
 public class SMTLIBDescription {
 
-	ArrayList<SMTFunction> expressionInputs;
+	private ArrayList<SMTFunction> expressionInputs;
 	private boolean getModel;
 	private boolean checkSat;
-	
+
 	public SMTLIBDescription(ArrayList<SMTFunction> expressionInputs, String originalTabularExpression, boolean checkSat, boolean getModel) {
 		this.expressionInputs = expressionInputs;
 		declareTerms(this.expressionInputs);
@@ -26,20 +26,20 @@ public class SMTLIBDescription {
 		this.checkSat = checkSat;
 		this.getModel = getModel;
 	}
-	
+
 	public String getEndingString() {
-		
-		 String SMT_LIB_DESC_END = ") ";
+
+		 String smtLibEndStr = ") ";
 
 		if (checkSat) {
-			SMT_LIB_DESC_END += "(check-sat) ";
+			smtLibEndStr += "(check-sat) ";
 		}
 		if (getModel) {
-			SMT_LIB_DESC_END += "(get-model) ";
+			smtLibEndStr += "(get-model) ";
 		}
-		SMT_LIB_DESC_END += "(exit)";
+		smtLibEndStr += "(exit)";
 		
-		return SMT_LIB_DESC_END;
+		return smtLibEndStr;
 	}
 	
     /**

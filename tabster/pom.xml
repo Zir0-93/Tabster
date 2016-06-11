@@ -105,7 +105,8 @@
                         you run out of memory, changes the value of the effort element to 'Low'. -->
                     <effort>default</effort>
                     <!-- Reports all bugs (other values are medium and max) -->
-                    <threshold>medium</threshold>
+                    <threshold>low</threshold>
+                     <includeFilterFile>${project.basedir}/src/main/resources/findbugsincludefilter.xml</includeFilterFile>
                 </configuration>
                 <executions>
                     <!-- Ensures that FindBugs inspects source code when project is compiled. -->

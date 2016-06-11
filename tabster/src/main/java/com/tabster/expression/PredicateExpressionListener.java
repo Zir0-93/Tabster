@@ -1,7 +1,6 @@
 package com.tabster.expression;
 
 import expression.PredicateExpressionBaseListener;
-import expression.PredicateExpressionBaseListener;
 import expression.PredicateExpressionParser;
 
 /**
@@ -20,8 +19,8 @@ public class PredicateExpressionListener extends PredicateExpressionBaseListener
     /**
      * Public constructor.
      */
-    public PredicateExpressionListener(SMTLIBDescription SMTLibDescription) {
-        this.smtLibDescription = SMTLibDescription;
+    public PredicateExpressionListener(SMTLIBDescription smtLibDescription) {
+        this.smtLibDescription = smtLibDescription;
     }
 
     @Override
@@ -31,7 +30,7 @@ public class PredicateExpressionListener extends PredicateExpressionBaseListener
             smtLibDescription.registerExpressionStart(ctx.andsign().get(0).getText());
         } else if (!ctx.orsign().isEmpty()) {
             smtLibDescription.registerExpressionStart(ctx.orsign().get(0).getText());
-        } else if(ctx.notsign() != null) {
+        } else if (ctx.notsign() != null) {
         	smtLibDescription.registerExpressionStart(ctx.notsign().getText());
         }
     }
@@ -56,7 +55,8 @@ public class PredicateExpressionListener extends PredicateExpressionBaseListener
     		if (ctx.FORALL() != null) {
     			smtLibDescription.registerPredicateExpressionStart(ctx.FORALL().getText(), ctx.variable().getText());
 
-    		} if (ctx.EXISTS() != null) {
+    		} 
+    		if (ctx.EXISTS() != null) {
     			smtLibDescription.registerPredicateExpressionStart(ctx.EXISTS().getText(), ctx.variable().getText());
     		}
     	} catch (Exception e) {

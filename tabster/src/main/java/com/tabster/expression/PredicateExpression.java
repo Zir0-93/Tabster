@@ -1,10 +1,5 @@
 package com.tabster.expression;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -14,37 +9,29 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.apache.commons.io.IOUtils;
-
-import com.tabster.expression.SMTLIBDescription;
-import com.tabster.expression.PredicateExpressionListener;
-import com.tabster.smtmodel.SMTModel;
-import com.tabster.smtmodel.TabsterSMTModelListener;
 import com.tabster.SMTFunction;
 import com.tabster.SMTScript;
 
 import expression.PredicateExpressionLexer;
 import expression.PredicateExpressionParser;
-import smtmodel.SMTModelLexer;
-import smtmodel.SMTModelParser;
 
 public final class PredicateExpression {
-	
+
 	private String predicateExpression;
 	private ArrayList<SMTFunction> expressionVars;
-	
-	public PredicateExpression(String predicateExpression, ArrayList<SMTFunction> expressionVars) {
+
+	public PredicateExpression(final String predicateExpression, ArrayList<SMTFunction> expressionVars) {
 	    this.predicateExpression = predicateExpression;
 	    this.expressionVars = expressionVars;
 	}
-	
+
     /**
      * Generates a SMT-LIB v2 compliant script for checking the satisfiability
      * and for getting the model of a given tabular expression.
      *
      * @param tabularExpression
      *            String containing a tabular expression.
-     * @param inputs 
+     * @param inputs
      * 		   List containing SMTFunction objects representing variable inputs in the tabular expression.
      * @return String representing the SMT-LIB script input to a SMT solver.
      * @throws Exception
@@ -72,7 +59,7 @@ public final class PredicateExpression {
 
     public String solve() throws Exception {
 
-    	String SMTLibString = smtLibSolverScript(true, true);
-    	return new SMTScript(SMTLibString).run();
+    	String smtLibString = smtLibSolverScript(true, true);
+    	return new SMTScript(smtLibString).run();
     }
 }

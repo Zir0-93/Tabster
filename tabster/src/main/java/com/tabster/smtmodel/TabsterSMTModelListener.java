@@ -1,6 +1,8 @@
 package com.tabster.smtmodel;
 
-import com.tabster.FormattedParserRuleContextString;
+import smtmodel.SMTModelBaseListener;
+import smtmodel.SMTModelParser;
+
 import com.tabster.SMTFunction;
 import com.tabster.SMTFunction.FunctionType;
 
@@ -29,7 +31,7 @@ public class TabsterSMTModelListener extends SMTModelBaseListener {
 		String discoveredVarValue;
 		if (ctx.varValue().divisionStatement() != null) {
 			if (discoveredVarType.equals(FunctionType.INT.value())) {
-				discoveredVarValue = String.valueOf((int)(Float.valueOf(ctx.varValue().divisionStatement().FloatingPointLiteral(0).toString()) 
+				discoveredVarValue = String.valueOf((int) (Float.valueOf(ctx.varValue().divisionStatement().FloatingPointLiteral(0).toString()) 
 						/ Float.valueOf(ctx.varValue().divisionStatement().FloatingPointLiteral(1).toString())));
 			} else {
 				discoveredVarValue = String.valueOf((Float.valueOf(ctx.varValue().divisionStatement().FloatingPointLiteral(0).toString()) 
@@ -41,7 +43,7 @@ public class TabsterSMTModelListener extends SMTModelBaseListener {
 		for (SMTFunction var : model.functions()) {
 			if (var.varName().equals(currentVarName)
 					&& var.type().value().equals(discoveredVarType)) {
-				var = new SMTFunction(discoveredVarType, discoveredVarValue, var.type());
+				var.setValue(discoveredVarValue);
 			}
 		}    	
 	}

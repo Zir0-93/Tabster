@@ -70,4 +70,9 @@ public class SMTFunction {
     		return this.value;
     	}    	
     }
+
+	public void setValue(String value) {
+		this.value = value;
+		
+	}
 }

@@ -1,4 +1,4 @@
-# tabster
+# :rocket: tabster
 
 [![Clarity Views Label](http://clarityviews.ca/badge)](http://clarityviews.ca/github/clarity-team/tabster?projectName=tabster)
 

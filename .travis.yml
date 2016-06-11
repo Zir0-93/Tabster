@@ -1,0 +1,6 @@
+language: java
+script: 
+         - cd tabster
+         - mvn clean package assembly:single
+after_success:
+- coveralls

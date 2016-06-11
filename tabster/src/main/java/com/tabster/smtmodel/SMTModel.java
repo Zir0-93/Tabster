@@ -12,67 +12,50 @@ import com.tabster.SMTFunction;
  */
 public class SMTModel implements Serializable{
 
-    private String smtModelAsString;
     private ArrayList<SMTFunction> functions = new ArrayList<SMTFunction>();
 	private boolean sat;
 
     public SMTModel(String SMTModelOutput, ArrayList<SMTFunction> expressionVars) {
-    	this.smtModelAsString = SMTModelOutput;
-    	this.functions = expressionVars;
-    }
-    
-    public SMTModel() {}
+    	
+    	
     /**
-     * @param functions
-     *            the functions to set
+     * Extracts the SMT-LIB functions from a String representing SMT-LIB Model
+     * Output.
      */
-    public void setFunctions(final ArrayList<SMTFunction> functions) {
-        this.functions = functions;
+
+ this.functions = expressionVars;
+    	 
+    	SMTModel result = null;
+    	try {
+    	 SMTModel model = new SMTModel(SMTModelOutput, expressionVars);
+         SMTModelLexer lexer = new SMTModelLexer(new ANTLRInputStream(SMTModelOutput));
+         final CommonTokenStream tokens = new CommonTokenStream(lexer);
+         SMTModelParser parser = new SMTModelParser(tokens);
+         final ParseTree tree = parser.compilationUnit();
+         parser.setErrorHandler(new BailErrorStrategy());
+         final ParseTreeWalker walker = new ParseTreeWalker();
+         TabsterSMTModelListener listener = new TabsterSMTModelListener(this);
+         walker.walk((ParseTreeListener) listener, tree);
+    	 result = listener.getParseResult();
+    	} catch (Exception e) {
+    		System.out.println("Could not process input SMT model string, are you sure it is well-formatted?");
+    		e.printStackTrace();
+    	}   	
     }
     
-	/**
-	 * @return the sat
-	 */
-	public boolean isSat() {
+	public boolean sat() {
 		return sat;
 	}
-
-	/**
-	 * @param sat the sat to set
-	 */
+	
 	public void setSat(boolean sat) {
-		this.sat = sat;
+	    this.sat = sat;
 	}
 
-    /**
-     * @return the functions
-     */
-    public ArrayList<SMTFunction> getFunctions() {
+    public ArrayList<SMTFunction> functions() {
         return functions;
     }
-
-    /**
-     * @return the sMTModelAsString
-     */
-    public String getSMTModelAsString() {
-        return smtModelAsString;
-    }
-
-    /**
-     * @param sMTModelAsString the sMTModelAsString to set
-     */
-    public void setSMTModelAsString(final String sMTModelAsString) {
-        smtModelAsString = sMTModelAsString;
-    }
-
-    /**
-     * Insert a new SMT function into the current model.
-     *
-     * @param function
-     *            function to insert
-     */
+    
     public void insertFunction(final SMTFunction function) {
         functions.add(function);
-
     }
 }

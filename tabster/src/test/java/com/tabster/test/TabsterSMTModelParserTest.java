@@ -7,7 +7,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.tabster.SMTFunction;
-import com.tabster.TabsterService;
 import com.tabster.SMTFunction.FunctionType;
 import com.tabster.smtmodel.SMTModel;
 
@@ -49,12 +48,11 @@ public class TabsterSMTModelParserTest {
         expressionVars.add(new SMTFunction(varAName, null, varAType));
         
         final String unparsedExpression = "sat (model(define-fun " + varXName + " () "
-        + varXType.getValue() + " " + varXValue + ")(define-fun " + varYNameModelString + " () " 
-        		+ varYType.getValue() + " " + varYValue + " )(define-fun " + varZName 
-        		+ " () " + varZType.getValue() + " " + varZValueString + ") (define-fun " + varANameModelString 
-        		+ " () " + varAType.getValue() + " " + varAStringValue + "))";
-       SMTModel model = TabsterService.extractModelFunctionsValues(unparsedExpression, expressionVars);
-       expressionVars = model.getFunctions();
+        + varXType.value() + " " + varXValue + ")(define-fun " + varYNameModelString + " () " 
+        		+ varYType.value() + " " + varYValue + " )(define-fun " + varZName 
+        		+ " () " + varZType.value() + " " + varZValueString + ") (define-fun " + varANameModelString 
+        		+ " () " + varAType.value() + " " + varAStringValue + "))";
+       expressionVars = new SMTModel(unparsedExpression, expressionVars).functions();
     }
     
     @Test
@@ -63,8 +61,8 @@ public class TabsterSMTModelParserTest {
     	boolean pass = false;
     	
     	for (SMTFunction var : expressionVars) {
-    		if (var.getVarName().equals(varXName)) {
-    			if (var.getValue().equals(varXValue)) {
+    		if (var.varName().equals(varXName)) {
+    			if (var.value().equals(varXValue)) {
     				pass = true;
     			}
     		}
@@ -78,8 +76,8 @@ public class TabsterSMTModelParserTest {
     	boolean pass = false;
     	
     	for (SMTFunction var : expressionVars) {
-    		if (var.getVarName().equals(varXName)) {
-    			if (var.getType().getValue().equals(varXType.getValue())) {
+    		if (var.varName().equals(varXName)) {
+    			if (var.type().value().equals(varXType.value())) {
     				pass = true;
     			}
     		}
@@ -93,8 +91,8 @@ public class TabsterSMTModelParserTest {
     	boolean pass = false;
     	
     	for (SMTFunction var : expressionVars) {
-    		if (var.getVarName().equals(varZName)) {
-    			if (var.getValue().equals(varZValue)) {
+    		if (var.varName().equals(varZName)) {
+    			if (var.value().equals(varZValue)) {
     				pass = true;
     			}
     		}
@@ -108,8 +106,8 @@ public class TabsterSMTModelParserTest {
     	boolean pass = false;
     	
     	for (SMTFunction var : expressionVars) {
-    		if (var.getVarName().equals(varAName)) {
-    			if (var.getValue().equals(varAValue)) {
+    		if (var.varName().equals(varAName)) {
+    			if (var.value().equals(varAValue)) {
     				pass = true;
     			}
     		}
@@ -123,8 +121,8 @@ public class TabsterSMTModelParserTest {
     	boolean pass = false;
     	
     	for (SMTFunction var : expressionVars) {
-    		if (var.getVarName().equals(varZName)) {
-    			if (var.getType().getValue().equals(varZType.getValue())) {
+    		if (var.varName().equals(varZName)) {
+    			if (var.type().value().equals(varZType.value())) {
     				pass = true;
     			}
     		}
@@ -138,8 +136,8 @@ public class TabsterSMTModelParserTest {
     	boolean pass = false;
     	
     	for (SMTFunction var : expressionVars) {
-    		if (var.getVarName().equals(varYName)) {
-    			if (var.getValue().equals(varYValue)) {
+    		if (var.varName().equals(varYName)) {
+    			if (var.value().equals(varYValue)) {
     				pass = true;
     			}
     		}
@@ -153,8 +151,8 @@ public class TabsterSMTModelParserTest {
     	boolean pass = false;
     	
     	for (SMTFunction var : expressionVars) {
-    		if (var.getVarName().equals(varYName)) {
-    			if (var.getType().getValue().equals(varYType.getValue())) {
+    		if (var.varName().equals(varYName)) {
+    			if (var.type().value().equals(varYType.value())) {
     				pass = true;
     			}
     		}

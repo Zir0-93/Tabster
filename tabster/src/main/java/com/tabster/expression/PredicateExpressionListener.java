@@ -142,7 +142,7 @@ public class PredicateExpressionListener extends PredicateExpressionBaseListener
         }
     }
 
-    public SMTLIBDescription getParseResult() {
+    public SMTLIBDescription parseResult() {
         return smtLibDescription;
     }
 }

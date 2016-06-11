@@ -1,63 +1,29 @@
 package com.tabster;
 
-import java.io.Serializable;
-
 /**
  * Represents an input to a predicate expression.
  * @author zir0
  *
  */
-public class SMTFunction implements Serializable{
+public class SMTFunction {
 
-    /**
-	 * @param varName the varName to set
-	 */
-	public void setVarName(String varName) {
-		this.varName = varName;
-	}
-	/**
-	 * @param type the type to set
-	 */
-	public void setType(FunctionType type) {
-		this.type = type;
-	}
+	private String varName;
+    private String value;
+    private FunctionType type;
 
-	private String varName = null;
-    private String value = null;;
-    private FunctionType type = null;
-
-    public SMTFunction() {}
-    /**
-     * @param varName
-     *            Name of the variable
-     * @param value
-     *            Value of the variable
-     * @param type
-     *            data type of the variable
-     */
     public SMTFunction(final String varName, final String value, final FunctionType type) {
         this.varName = varName;
         this.value = value;
         this.type = type;
     }
 
-    public void setValue(String value) {
-		this.value = value;
-	}
-
-	/**
-     * @return name of the variable
-     */
     public final
-    String getVarName() {
+    String varName() {
         return varName;
     }
 
-    /**
-     * @return value of the variable
-     */
     public final
-    String getValue() {
+    String value() {
         return value;
     }
 
@@ -66,10 +32,7 @@ public class SMTFunction implements Serializable{
         return varName + "=" + value;
     }
 
-    /**
-     * @return the type of the variable
-     */
-    public FunctionType getType() {
+    public FunctionType type() {
         return type;
     }
 
@@ -81,7 +44,7 @@ public class SMTFunction implements Serializable{
      */
     public boolean isEqual(final SMTFunction var) {
 
-        if (var.getType().equals(type) && var.getValue().equals(value) && var.getVarName().equals(varName)) {
+        if (var.type().equals(type) && var.value().equals(value) && var.varName().equals(varName)) {
             return true;
         }
         return false;
@@ -103,8 +66,13 @@ public class SMTFunction implements Serializable{
 			this.value = value;
 		}
     	
-    	public String getValue() {
+    	public String value() {
     		return this.value;
     	}    	
     }
+
+	public void setValue(String value) {
+		this.value = value;
+		
+	}
 }

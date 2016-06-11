@@ -15,33 +15,33 @@ import com.tabster.SMTFunction;
  */
 public class SMTLIBDescription {
 
-	ArrayList<SMTFunction> expressionInputs;
-	private String plainTabularExpression;
+	private ArrayList<SMTFunction> expressionInputs;
 	private boolean getModel;
 	private boolean checkSat;
+
 	public SMTLIBDescription(ArrayList<SMTFunction> expressionInputs, String originalTabularExpression, boolean checkSat, boolean getModel) {
 		this.expressionInputs = expressionInputs;
-		this.setPlainTabularExpression(originalTabularExpression);
 		declareTerms(this.expressionInputs);
 		this.smtLIBDescription += " (assert ";
 		this.checkSat = checkSat;
 		this.getModel = getModel;
 	}
-	
+
 	public String getEndingString() {
-		
-		 String SMT_LIB_DESC_END = ") ";
+
+		 String smtLibEndStr = ") ";
 
 		if (checkSat) {
-			SMT_LIB_DESC_END += "(check-sat) ";
+			smtLibEndStr += "(check-sat) ";
 		}
 		if (getModel) {
-			SMT_LIB_DESC_END += "(get-model) ";
+			smtLibEndStr += "(get-model) ";
 		}
-		SMT_LIB_DESC_END += "(exit)";
+		smtLibEndStr += "(exit)";
 		
-		return SMT_LIB_DESC_END;
+		return smtLibEndStr;
 	}
+	
     /**
      * Maps common expression operators to their equivalent SMT LIB String
      * representation.
@@ -77,13 +77,13 @@ public class SMTLIBDescription {
 
     private String smtLIBDescription = SMT_LIB_DESC_BEGIN;
 
-    public String getSMTLIBDescription() {
+    public String smtLIBDescription() {
         return smtLIBDescription + getEndingString();
     }
     
     @Override
     public String toString() {
-    	return getSMTLIBDescription();
+    	return smtLIBDescription();
     }
 
     public void registerExpressionEnd() {
@@ -117,30 +117,16 @@ public class SMTLIBDescription {
      */
     public void declareTerms(ArrayList<SMTFunction> inputs) {
     	for (SMTFunction input : inputs) {
-    		smtLIBDescription += "(declare-fun " + input.getVarName() + " () " + input.getType().getValue() + ") ";   
+    		smtLIBDescription += "(declare-fun " + input.varName() + " () " + input.type().value() + ") ";   
     	}
     }
-
-	/**
-	 * @return the plainTabularExpression
-	 */
-	public String getPlainTabularExpression() {
-		return plainTabularExpression;
-	}
-
-	/**
-	 * @param plainTabularExpression the plainTabularExpression to set
-	 */
-	public void setPlainTabularExpression(String plainTabularExpression) {
-		this.plainTabularExpression = plainTabularExpression;
-	}
 
 	public void registerPredicateExpressionStart(String quantifierSymbol,
 			String variable) throws Exception {
 		String type = null;
 		for (SMTFunction possibleMatchingInput : expressionInputs) {
-			if (possibleMatchingInput.getVarName().equals(variable)) {
-				type = possibleMatchingInput.getType().getValue();
+			if (possibleMatchingInput.varName().equals(variable)) {
+				type = possibleMatchingInput.type().value();
 			}
 		}
 		if (type == null) {
@@ -148,6 +134,5 @@ public class SMTLIBDescription {
 		}
 		registerExpressionStart(quantifierSymbol);
 		smtLIBDescription += "((" + variable + " " + type + ")) "; 
-		
 	}
 }

@@ -3,7 +3,6 @@ package com.tabster.smtmodel;
 import smtmodel.SMTModelBaseListener;
 import smtmodel.SMTModelParser;
 
-import com.tabster.AntlrUtil;
 import com.tabster.SMTFunction;
 import com.tabster.SMTFunction.FunctionType;
 
@@ -20,11 +19,7 @@ public class TabsterSMTModelListener extends SMTModelBaseListener {
 
 	private final SMTModel model;
 	private String currentVarName;
-	private boolean sat;
 
-	/**
-	 * Public constructor.
-	 */
 	public TabsterSMTModelListener(SMTModel smtModel) {
 		model = smtModel;
 	}
@@ -35,8 +30,8 @@ public class TabsterSMTModelListener extends SMTModelBaseListener {
 		String discoveredVarType = ctx.varType().getText();
 		String discoveredVarValue;
 		if (ctx.varValue().divisionStatement() != null) {
-			if (discoveredVarType.equals(FunctionType.INT.getValue())) {
-				discoveredVarValue = String.valueOf((int)(Float.valueOf(ctx.varValue().divisionStatement().FloatingPointLiteral(0).toString()) 
+			if (discoveredVarType.equals(FunctionType.INT.value())) {
+				discoveredVarValue = String.valueOf((int) (Float.valueOf(ctx.varValue().divisionStatement().FloatingPointLiteral(0).toString()) 
 						/ Float.valueOf(ctx.varValue().divisionStatement().FloatingPointLiteral(1).toString())));
 			} else {
 				discoveredVarValue = String.valueOf((Float.valueOf(ctx.varValue().divisionStatement().FloatingPointLiteral(0).toString()) 
@@ -45,9 +40,9 @@ public class TabsterSMTModelListener extends SMTModelBaseListener {
 		} else {
 			discoveredVarValue = ctx.varValue().getText();
 		}
-		for (SMTFunction var : model.getFunctions()) {
-			if (var.getVarName().equals(currentVarName)
-					&& var.getType().getValue().equals(discoveredVarType)) {
+		for (SMTFunction var : model.functions()) {
+			if (var.varName().equals(currentVarName)
+					&& var.type().value().equals(discoveredVarType)) {
 				var.setValue(discoveredVarValue);
 			}
 		}    	
@@ -68,12 +63,6 @@ public class TabsterSMTModelListener extends SMTModelBaseListener {
 
 		currentVarName = ctx.Identifier().getText();
 	}
-
-    @Override
-    public final void enterCompilationUnit(final SMTModelParser.CompilationUnitContext ctx) {
-
-        model.setSMTModelAsString(AntlrUtil.getFormattedText(ctx));
-    }
 
     public SMTModel getParseResult() {
         return model;

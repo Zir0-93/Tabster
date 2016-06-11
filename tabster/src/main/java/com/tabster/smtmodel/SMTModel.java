@@ -1,7 +1,16 @@
 package com.tabster.smtmodel;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.BailErrorStrategy;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
+import smtmodel.SMTModelLexer;
+import smtmodel.SMTModelParser;
 
 import com.tabster.SMTFunction;
 
@@ -10,69 +19,49 @@ import com.tabster.SMTFunction;
  *
  * @author Muntazir Fadhel
  */
-public class SMTModel implements Serializable{
+public class SMTModel {
 
-    private String smtModelAsString;
-    private ArrayList<SMTFunction> functions = new ArrayList<SMTFunction>();
+	private ArrayList<SMTFunction> functions = new ArrayList<SMTFunction>();
 	private boolean sat;
 
-    public SMTModel(String SMTModelOutput, ArrayList<SMTFunction> expressionVars) {
-    	this.smtModelAsString = SMTModelOutput;
-    	this.functions = expressionVars;
-    }
-    
-    public SMTModel() {}
-    /**
-     * @param functions
-     *            the functions to set
-     */
-    public void setFunctions(final ArrayList<SMTFunction> functions) {
-        this.functions = functions;
-    }
-    
-	/**
-	 * @return the sat
-	 */
-	public boolean isSat() {
+	public SMTModel(String smtModelOutput, ArrayList<SMTFunction> expressionVars) {
+
+
+		/**
+		 * Extracts the SMT-LIB functions from a String representing SMT-LIB Model
+		 * Output.
+		 */
+		this.functions = expressionVars;
+
+		try {
+			SMTModelLexer lexer = new SMTModelLexer(new ANTLRInputStream(smtModelOutput));
+			final CommonTokenStream tokens = new CommonTokenStream(lexer);
+			SMTModelParser parser = new SMTModelParser(tokens);
+			final ParseTree tree = parser.compilationUnit();
+			parser.setErrorHandler(new BailErrorStrategy());
+			final ParseTreeWalker walker = new ParseTreeWalker();
+			TabsterSMTModelListener listener = new TabsterSMTModelListener(this);
+			walker.walk((ParseTreeListener) listener, tree);
+			listener.getParseResult();
+		} catch (Exception e) {
+			System.out.println("Could not process input SMT model string, are you sure it is well-formatted?");
+			e.printStackTrace();
+		}   	
+	}
+
+	public boolean sat() {
 		return sat;
 	}
 
-	/**
-	 * @param sat the sat to set
-	 */
 	public void setSat(boolean sat) {
 		this.sat = sat;
 	}
 
-    /**
-     * @return the functions
-     */
-    public ArrayList<SMTFunction> getFunctions() {
-        return functions;
-    }
+	public ArrayList<SMTFunction> functions() {
+		return functions;
+	}
 
-    /**
-     * @return the sMTModelAsString
-     */
-    public String getSMTModelAsString() {
-        return smtModelAsString;
-    }
-
-    /**
-     * @param sMTModelAsString the sMTModelAsString to set
-     */
-    public void setSMTModelAsString(final String sMTModelAsString) {
-        smtModelAsString = sMTModelAsString;
-    }
-
-    /**
-     * Insert a new SMT function into the current model.
-     *
-     * @param function
-     *            function to insert
-     */
-    public void insertFunction(final SMTFunction function) {
-        functions.add(function);
-
-    }
+	public void insertFunction(final SMTFunction function) {
+		functions.add(function);
+	}
 }

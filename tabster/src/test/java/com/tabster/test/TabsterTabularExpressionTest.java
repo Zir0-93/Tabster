@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.tabster.PropertyVerificationResult;
 import com.tabster.SMTFunction;
-import com.tabster.TabsterService;
+import com.tabster.TabularExpression;
 import com.tabster.SMTFunction.FunctionType;
-import com.tabster.smtmodel.SMTModel;
 
 public class TabsterTabularExpressionTest {
 
@@ -20,7 +20,7 @@ public class TabsterTabularExpressionTest {
 		tabularExpression.add("x < 0");
 		tabularExpression.add("x = 0");   
 		expressionVars.add(new SMTFunction("x", null, FunctionType.INT));
-		final boolean isComplete = !TabsterService.determineTabularExpressionCompleteness(tabularExpression, expressionVars).isSat();
+		final boolean isComplete = new TabularExpression(tabularExpression,expressionVars).checkCompleteness().satisfied();
 		Assert.assertTrue(isComplete == true);
 	}
 	
@@ -32,7 +32,7 @@ public class TabsterTabularExpressionTest {
 		tabularExpression.add("x < 5");
 		tabularExpression.add("x = 5");   
 		expressionVars.add(new SMTFunction("x", null, FunctionType.INT));
-		final boolean isDisjoint = !TabsterService.determineTabularExpressionDisjointness(tabularExpression, expressionVars).isSat();
+		final boolean isDisjoint = new TabularExpression(tabularExpression,expressionVars).checkDisjointness().satisfied();
 		Assert.assertTrue(isDisjoint == true);
 	}
 	
@@ -43,10 +43,9 @@ public class TabsterTabularExpressionTest {
 		tabularExpression.add("x > 5");
 		tabularExpression.add("x < 5");   
 		expressionVars.add(new SMTFunction("x", null, FunctionType.INT));
-		SMTModel model = TabsterService.determineTabularExpressionCompleteness(tabularExpression, expressionVars);
-		final boolean isComplete = !model.isSat();
-		Assert.assertTrue(isComplete == false);
-		Assert.assertTrue(model.getFunctions().get(0).getValue().equals("5"));
+		PropertyVerificationResult result = new TabularExpression(tabularExpression,expressionVars).checkCompleteness();
+		Assert.assertTrue(result.satisfied() == false);
+		Assert.assertTrue(result.counterExamples().get(0).value().equals("5"));
 	}
 	
 
@@ -58,10 +57,9 @@ public class TabsterTabularExpressionTest {
 		tabularExpression.add("x < 5");
 		tabularExpression.add("x < 8");   
 		expressionVars.add(new SMTFunction("x", null, FunctionType.INT));
-		SMTModel model = TabsterService.determineTabularExpressionDisjointness(tabularExpression, expressionVars);
-		final boolean isDisjoint = !model.isSat();
-		Assert.assertTrue(isDisjoint == false);
-		Assert.assertTrue(model.getFunctions().get(0).getValue().equals("0"));
+		PropertyVerificationResult result = new TabularExpression(tabularExpression,expressionVars).checkDisjointness(); 
+		Assert.assertTrue(result.satisfied() == false);
+		Assert.assertTrue(result.counterExamples().get(0).value().equals("0"));
 	}
 	
 	@Test
@@ -70,7 +68,7 @@ public class TabsterTabularExpressionTest {
 		final ArrayList<String> tabularExpression = new ArrayList<String>();
 		tabularExpression.add("{∃x:(x > 5)}"); 
 		expressionVars.add(new SMTFunction("x", null, FunctionType.INT));
-		final boolean isComplete = !TabsterService.determineTabularExpressionCompleteness(tabularExpression, expressionVars).isSat();
+		final boolean isComplete = new TabularExpression(tabularExpression,expressionVars).checkCompleteness().satisfied();
 		Assert.assertTrue(isComplete == true);
 	}
 	
@@ -83,11 +81,10 @@ public class TabsterTabularExpressionTest {
 		tabularExpression.add("(x = 5) & ((y = true) | (y = false)) ");   
 		expressionVars.add(new SMTFunction("x", null, FunctionType.INT));
 		expressionVars.add(new SMTFunction("y", null, FunctionType.BOOL));
-		SMTModel model = TabsterService.determineTabularExpressionDisjointness(tabularExpression, expressionVars);
-		final boolean isDisjoint = !model.isSat();
-		Assert.assertTrue(isDisjoint == false);
-		Assert.assertTrue(model.getFunctions().get(0).getValue().equals("5"));
-		Assert.assertTrue(model.getFunctions().get(1).getValue().equals("true"));
+		PropertyVerificationResult result = new TabularExpression(tabularExpression, expressionVars).checkDisjointness();
+		Assert.assertTrue(result.satisfied() == false);
+		Assert.assertTrue(result.counterExamples().get(0).value().equals("5"));
+		Assert.assertTrue(result.counterExamples().get(1).value().equals("true"));
 	}
 	
 	@Test
@@ -98,9 +95,8 @@ public class TabsterTabularExpressionTest {
 		tabularExpression.add("((x <= 5) || (y = true))");  
 		expressionVars.add(new SMTFunction("x", null, FunctionType.INT));
 		expressionVars.add(new SMTFunction("y", null, FunctionType.BOOL));
-		SMTModel model = TabsterService.determineTabularExpressionDisjointness(tabularExpression, expressionVars);
-		final boolean isDisjoint = !model.isSat();
-		Assert.assertTrue(isDisjoint == true);
+		PropertyVerificationResult result = new TabularExpression(tabularExpression, expressionVars).checkDisjointness();
+		Assert.assertTrue(result.satisfied() == true);
 	}
 	
 	@Test
@@ -109,10 +105,9 @@ public class TabsterTabularExpressionTest {
 		final ArrayList<String> tabularExpression = new ArrayList<String>();
 		tabularExpression.add("{∀x:(x > 5)}"); 
 		expressionVars.add(new SMTFunction("x", null, FunctionType.INT));
-		SMTModel model = TabsterService.determineTabularExpressionCompleteness(tabularExpression, expressionVars);
-		final boolean isComplete = !model.isSat();
-		Assert.assertTrue(isComplete == false);
-		Assert.assertTrue(model.getFunctions().get(0).getValue().equals("0"));
+		PropertyVerificationResult result = new TabularExpression(tabularExpression, expressionVars).checkCompleteness();
+		Assert.assertTrue(result.satisfied() == false);
+		Assert.assertTrue(result.counterExamples().get(0).value().equals("0"));
 	}
 	
 	@Test
@@ -131,10 +126,10 @@ public class TabsterTabularExpressionTest {
         //expressions.add("(x < 0) & (y < 3)");
         expressionVars.add(new SMTFunction("x", null, FunctionType.INT));
         expressionVars.add(new SMTFunction("y", null, FunctionType.INT));
-        SMTModel model = TabsterService.determineTabularExpressionCompleteness(expressions, expressionVars);
-        Assert.assertTrue(model.isSat());
-        model = TabsterService.determineTabularExpressionDisjointness(expressions, expressionVars);
-        Assert.assertTrue(!model.isSat());
+        PropertyVerificationResult result = new TabularExpression(expressions, expressionVars).checkCompleteness();
+        Assert.assertTrue(result.satisfied() == false);
+        result = new TabularExpression(expressions, expressionVars).checkDisjointness();
+        Assert.assertTrue(result.satisfied() == true);
 		
 	}
 }

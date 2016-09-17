@@ -1,6 +1,6 @@
 # :rocket: tabster
 
-[![Clarity Views Label](http://clarityviews.com/badge)](http://clarityviews.com/github/clarity-team/tabster)
+[![Clarity Views Label](http://clarityviews.io/badge)](http://clarityviews.io/github/clarity-team/tabster)
 
 Tabster is an object oriented library used for verifying properties of tabular expressions such as completeness and disjointness through the use of SMT solvers. When a given property is not satisfied, Tabster returns counter examples to highlight the situation in which the property fails to hold.
 
